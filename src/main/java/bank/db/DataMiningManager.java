@@ -12,33 +12,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static bank.db.QueryConstant.INPUTDATAINSERTQUERY;
 
-/**
- * Class representing an DataMiningManager.
- * @author Rishanthan
- */
+
+
 public class DataMiningManager {
     
-    /**
-     * Method used to get the prediction results.
-     * @param connection - DB Connection.
-     * @return
-     * @throws SQLException 
-     */
-    public static String[] getPredictionResult(Connection connection) throws SQLException {
+
+    public static CustomerTermDeposit getPredictionResult(CustomerTermDeposit cus) throws SQLException {
         Statement stmt = null;
-        String[] results = new String[2];
+        Connection connection = DBConnection.getConnection();
 
         try {
             stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(QueryConstant.PREDICTIONQUERY);
+            ResultSet rs = stmt.executeQuery(QueryConstant.PREDICTION_QUERY);
             while (rs.next()) {
-                results[0]= rs.getString(QueryConstant.MODELPREDICTION);
-                results[1]=rs.getString(QueryConstant.MODELPROBABILITY);
+                cus.y= rs.getString(QueryConstant.MODELPREDICTION);
+                cus.probability=rs.getFloat(QueryConstant.MODELPROBABILITY);
 
-                System.out.println("[Log][Info][getPredictionResult]: Prediction: "+ results[0] + "\t");
-                System.out.println("[Log][Info][getPredictionResult]: Probability: "+ results[1] + "\t");
+                System.out.println("[Log][Info][getPredictionResult]: Prediction: "+ cus.y + "\t");
+                System.out.println("[Log][Info][getPredictionResult]: Probability: "+ cus.probability + "\t");
             }
         } catch (SQLException e) {
              System.out.println("[Log][Error][getPredictionResult]: " + e );
@@ -47,112 +39,60 @@ public class DataMiningManager {
                 stmt.close();
             }
         }
-        
-        return results;
-    }
-    
 
-    public static void insertNewData( CustomerTermDeposit cusDep)throws SQLException {
+        return cus;
+    }
+
+    public static void insertData(CustomerTermDeposit cus) throws SQLException {
+        String query = "INSERT INTO BANKM_PREDICT (ID, COLUMN1, COLUMN2, COLUMN3, COLUMN4, COLUMN5, COLUMN6, " +
+                "COLUMN7, COLUMN8, COLUMN9, COLUMN10, COLUMN11, COLUMN12, COLUMN13, COLUMN14, COLUMN15, COLUMN16) \n" +
+                "VALUES (SE.nextval, "+cus.age+",'"+cus.job+"','"+cus.marital+"','"+cus.education+"'," +
+                "'"+cus.default_+"',"+cus.balance+",'"+cus.housing+"'," +
+                "'"+cus.loan+"','"+cus.contact+"',"+cus.day+",'"+cus.month+"',"+cus.duration+"," +
+                ""+cus.campaign+","+cus.pdays+","+cus.previous+",'"+cus.poutcome+"')\n";
+
+        System.out.println("[Log][Info][CustomerTermDeposit]" + query);
         Statement stmt = null;
         Connection connection = DBConnection.getConnection();
-        
-        String query =
-        INPUTDATAINSERTQUERY
-                +cusDep.getAge() +",' "+cusDep.getJob() +"', '"+cusDep.getMarital()
-                +"',' "+cusDep.getEducation()
-                +"',' "+cusDep.getDefault_()
-                +"',' "+cusDep.getBalance()
-                +"',' "+cusDep.getHousing()
-                +"',' "+cusDep.getLoan()
-                +"',' "+cusDep.getContact()
-                +"',' "+cusDep.getDay()
-                +"',' "+cusDep.getMonth()
-                +"',' "+cusDep.getDuration()
-                +"',' "+cusDep.getCampaign()
-                +"',' "+cusDep.getPdays()
-                +"',' "+cusDep.getPrevious()
-                +"',' "+cusDep.getPoutcome()+
-                "')";
 
-
-        System.out.println(query);
         try {
             stmt = connection.createStatement();
             int  rs = stmt.executeUpdate(query);
             if(rs>0){
-                System.out.println("[Log][Info][insertNewData] New values inserted");
+                System.out.println("[Log][Info][CustomerTermDeposit] New values inserted");
             }
         } catch (SQLException e) {
-            System.out.println("[Log][Error][insertNewData]: " + e );
+            System.out.println("[Log][Error][CustomerTermDeposit]: " + e );
         } finally {
             if (stmt != null) {
                 stmt.close();
             }
         }
+
     }
 
-    /**
-     * Method used to delete the previous data in the database table.
-     * @param connection - DB Connection
-     * @throws SQLException 
-     */
-    public static void deletePreviousData(Connection connection) throws SQLException {
-        
-        if (!checkDataExists(connection)) {
-            return;
-        }
-        
+    public static CustomerTermDeposit getLastInsertedCustomerTermDeposit(CustomerTermDeposit cus) throws SQLException {
+        String query = "Select * from BANKM_PREDICT where ID = (Select MAX(ID) from BANKM_PREDICT)";
+        Connection connection = DBConnection.getConnection();
         Statement stmt = null;
-        String query = "DELETE FROM DMUSER.PRIMARY_TUMOR_APPLY";
-        
-        try {
-            stmt = connection.createStatement();
-            int  rs = stmt.executeUpdate(query);
-            
-            if(rs>0){
-                System.out.println("[Log][Succes][deletePreviousData]: Database Cleared");
-            }
-        } catch (SQLException e) {
-             System.out.println("[Log][Error][deletePreviousData]: " + e );
-        } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
-        }
-    }
-    
-    /**
-     * Method used to check whether any data exists in the table.
-     * @param connection - DB Connection.
-     * @return - boolean
-     * @throws SQLException 
-     */
-    public static boolean checkDataExists(Connection connection) throws SQLException{
-        
-        System.out.println("[Log][Info][checkDataExists]: Start");
-        
-        Statement stmt = null;
-        String query = "SELECT * FROM DMUSER.PRIMARY_TUMOR_APPLY";
-        boolean result = true;
-        
         try {
             stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            
-            if(rs.next()){
-                result = true;
-            }  
+            while (rs.next()) {
+
+                cus.id= rs.getLong("ID");
+
+                System.out.println("[Log][Info][getLastInsertedCustomer]: Customer: "+ rs.getLong("ID"));
+
+            }
         } catch (SQLException e) {
-             System.out.println("[Log][Error][checkDataExists]:"+ e );
-             result = false;
+            System.out.println("[Log][Error][getLastInsertedCustomer]: " + e );
         } finally {
             if (stmt != null) {
                 stmt.close();
             }
         }
-        
-        System.out.println("[Log][Info][checkDataExists]: Finish");
-        
-        return result;
+
+        return  cus;
     }
 }

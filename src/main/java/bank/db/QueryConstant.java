@@ -12,15 +12,13 @@ package bank.db;
 public class QueryConstant {
     
     
-    public static final String MODELPREDICTION = "CLAS_DT_1_5_PRED";
+    public static final String MODELPREDICTION = "CLAS_GLM_1_5_PRED";
     
-    public static final String MODELPROBABILITY = "CLAS_DT_1_5_PROB";
+    public static final String MODELPROBABILITY = "CLAS_GLM_1_5_PROB";
 
-    public static final String MODELYESPROBABILITY = "CLAS_DT_1_5_PCST";
-    
-    // Query used to get the prediction and probability of the prediction.
-    public static final String PREDICTIONQUERY =   "WITH \n" +
-            "/* Start of sql for node: BANKM_PREDICT1_APPLY */\n" +
+    public static final String PREDICTION_QUERY = "\n" +
+            "WITH \n" +
+            "/* Start of sql for node: BANKM1_APPLY */\n" +
             "\"N$10010\" as (select /*+ inline */ \"BANKM_PREDICT\".\"COLUMN17\", \n" +
             "\"BANKM_PREDICT\".\"COLUMN9\", \n" +
             "\"BANKM_PREDICT\".\"COLUMN14\", \n" +
@@ -39,37 +37,20 @@ public class QueryConstant {
             "\"BANKM_PREDICT\".\"COLUMN2\", \n" +
             "\"BANKM_PREDICT\".\"ID\", \n" +
             "\"BANKM_PREDICT\".\"COLUMN1\" \n" +
-            "from \"DMUSER\".\"BANKM_PREDICT\"  )\n" +
-            "/* End of sql for node: BANKM_PREDICT1_APPLY */\n" +
+            "from \"DMUSER\".\"BANKM_PREDICT\" \n" +
+            "WHERE \"BANKM_PREDICT\".\"ID\" = (SELECT MAX(\"B\".\"ID\") from \"DMUSER\".\"BANKM_PREDICT\" B )\n" +
+            ")\n" +
+            "/* End of sql for node: BANKM1_APPLY */\n" +
             ",\n" +
             "/* Start of sql for node: Apply_model */\n" +
             "\"N$10011\" as (SELECT /*+ inline */\n" +
             "\"ID\", \n" +
-            "PREDICTION(\"CLAS_DT_1_5\" COST MODEL USING *) \"CLAS_DT_1_5_PRED\", \n" +
-            "PREDICTION_PROBABILITY(\"CLAS_DT_1_5\", PREDICTION(\"CLAS_DT_1_5\" COST MODEL USING *) USING *) \"CLAS_DT_1_5_PROB\", \n" +
-            "PREDICTION_COST(\"CLAS_DT_1_5\" COST MODEL USING *) \"CLAS_DT_1_5_PCST\"\n" +
+            "PREDICTION(\"CLAS_GLM_1_5\" USING *) \"CLAS_GLM_1_5_PRED\", \n" +
+            "PREDICTION_PROBABILITY(\"CLAS_GLM_1_5\" USING *) \"CLAS_GLM_1_5_PROB\", \n" +
+            "PREDICTION_BOUNDS(\"CLAS_GLM_1_5\", 0.95 USING *).LOWER \"CLAS_GLM_1_5_PBLW\", \n" +
+            "PREDICTION_BOUNDS(\"CLAS_GLM_1_5\", 0.95 USING *).UPPER \"CLAS_GLM_1_5_PBUP\"\n" +
             "FROM \"N$10010\" )\n" +
             "/* End of sql for node: Apply_model */\n" +
-            "select * from \"N$10011\";";
-    
-    public static final String INPUTDATAINSERTQUERY = "Insert into DMUSER.BANKM_PREDICT ("
-            + "ID,"
-            + "COLUMN1,"
-            + "COLUMN2,"
-            + "COLUMN3,"
-            + "COLUMN4,"
-            + "COLUMN5,"
-            + "COLUMN6,"
-            + "COLUMN7,"
-            + "COLUMN8,"
-            + "COLUMN9,"
-            + "COLUMN10,"
-            + "COLUMN11,"
-            + "COLUMN12,"
-            + "COLUMN13,"
-            + "COLUMN14,"
-            + "COLUMN15,"
-            +"COLUMN16"
-            + ") values ( SE.nextval, ";
-    
+            "select * from \"N$10011\"";
+
 }

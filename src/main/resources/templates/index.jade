@@ -5,62 +5,192 @@ block content
 
     h1  Welcome to Bank Marketing Predictor
 
-    form(name="add-details", method="post")
-            div.input
-                span.label Age
-                input(type="text", name="age")
-            div.input
-                span.label Job
-                input(type="text", name="age")
-            div.input
-                span.label Marital Status
-                input(type="text", name="age")
-            div.input
-                span.label Education
-                input(type="text", name="age")
-            div.input
-                span.label Default
-                input(type="text", name="age")
-            div.input
-                span.label Balance
-                input(type="text", name="age")
-            div.input
-                span.label Housing
-                input(type="text", name="age")
-            div.input
-                span.label Loan
-                input(type="text", name="age")
-            div.input
-                span.label Contact
-                input(type="text", name="age")
-            div.input
-                span.label Day
-                input(type="text", name="age")
-            div.input
-                span.label Month
-                input(type="text", name="age")
-            div.input
-                span.label Duration
-                input(type="text", name="age")
-            div.input
-                span.label Campaign
-                input(type="text", name="age")
-            div.input
-                span.label
-                input(type="text", name="age")
-            div.input
-                span.label Job
-                input(type="text", name="age")
-            div.input
-                span.label Job
-                input(type="text", name="age")
-            div.input
-                span.label Job
-                input(type="text", name="age")
-            div.input
-                span.label Job
-                input(type="text", name="age")
+    form#bank(name="add-details",class="form-horizontal", method="post", onsubmit="return save()")
+            div.form-group
+                label(class="control-label col-md-2") Age
+                div.col-md-10
+                    input(type="number", name="age",  class="form-control input-sm")
 
 
-            div.actions
-                input(type="submit", value="add")
+            div.form-group
+                label(class="control-label col-md-2") Job
+                div.col-md-10
+                    select(class="form-control input-sm" name="job", required="true")
+                        option(value="admin") Admin
+                        option(value="blue-collar") Blue-collar
+                        option(value="entrepreneur") Entrepreneur
+                        option(value="housemaid") Housemaid
+                        option(value="management") Management
+                        option(value="retired") Retired
+                        option(value="self-employed") Self-employed
+                        option(value="services") Services
+                        option(value="student") Student
+                        option(value="technician") Technician
+                        option(value="unemployed") Unemployed
+                        option(value="unknown") Unknown
+
+            div.form-group
+                label(class="control-label col-md-2") Marital Status
+                div.col-md-10
+                    select(class="form-control input-sm" name="marital", required="true")
+                        option(value="divorced") Divorced
+                        option(value="married") Married
+                        option(value="single") Single
+                        option(value="unknown") Unknown
+
+            div.form-group
+                label(class="control-label col-md-2") Education
+                div.col-md-10
+                    select(class="form-control input-sm" name="education", required="true")
+                        option(value="basic.4y") Basic 4Y
+                        option(value="basic.6y") Basic 6Y
+                        option(value="basic.9y") Basic 9Y
+                        option(value="high.school") High School
+                        option(value="illiterate") Illiterate
+                        option(value="professional.course") Professional Course
+                        option(value="university.degree") University Degree
+                        option(value="unknown") Unknown
+
+            div.form-group
+                label(class="control-label col-md-2") Has credit in default?
+                div.col-md-10
+                    select(class="form-control input-sm" name="default_", required="true")
+                        option(value="no") No
+                        option(value="yes") Yes
+                        option(value="unknown") Unknown
+
+
+            div.form-group
+                label(class="control-label col-md-2") Balance
+                div.col-md-10
+                    input(type="number", name="balance",  class="form-control input-sm")
+
+
+            div.form-group
+                label(class="control-label col-md-2") Has Housing Loan ?
+                div.col-md-10
+                    select(class="form-control input-sm" name="housing", required="true")
+                        option(value="no") No
+                        option(value="yes") Yes
+
+
+            div.form-group
+                label(class="control-label col-md-2") Has Personal Loan ?
+                div.col-md-10
+                    select(class="form-control input-sm" name="loan", required="true")
+                        option(value="no") No
+                        option(value="yes") Yes
+
+
+            div.form-group
+                label(class="control-label col-md-2") Communication Type
+                div.col-md-10
+                    select(class="form-control input-sm" name="contact", required="true")
+                        option(value="telephone") Telephone
+                        option(value="cellular") Cellular
+                        option(value="unknown") Unknown
+
+
+            div.form-group
+                label(class="control-label col-md-2") Day
+                div.col-md-10
+                    input(type="number", name="day",  class="form-control input-sm")
+
+
+            div.form-group
+                label(class="control-label col-md-2") Month
+                div.col-md-10
+                    input(type="number", name="month",  class="form-control input-sm")
+
+            div.form-group
+                label(class="control-label col-md-2") Duration
+                div.col-md-10
+                    input(type="number", name="duration",  class="form-control input-sm")
+
+            div.form-group
+                label(class="control-label col-md-2") Campaign
+                div.col-md-10
+                    input(type="number", name="campaign",  class="form-control input-sm")
+
+            div.form-group
+                label(class="control-label col-md-2") Number of days that passed by
+                div.col-md-10
+                    input(type="number", name="pdays",  class="form-control input-sm")
+
+            div.form-group
+                label(class="control-label col-md-2") Previous
+                div.col-md-10
+                    input(type="number", name="previous",  class="form-control input-sm")
+
+            div.form-group
+                label(class="control-label col-md-2") Outcome of the previous marketing campaign
+                div.col-md-10
+                    select(class="form-control input-sm" name="poutcome", required="true")
+                        option(value="failure") Failure
+                        option(value="nonexistent") Nonexistent
+                        option(value="success") Success
+
+
+            div.form-group
+                div(class="col-md-2 col-md-offset-10")
+                    button(class="btn btn-success btn-block") SAVE
+
+
+    div#modal(class="modal fade")
+        div.modal-dialog
+            div.modal-content
+                div.modal-header
+                    h4.modal-title Successfully Inserted
+
+                div.modal-body
+                    h4 Customer ID :
+                        span#customerID
+
+                    h4 Will the customer subscribe to the bank term deposit?
+                        span#deposit
+
+                    h4  Probability :
+                        span#probability
+                div.modal-footer
+                    button(class="btn btn-default", data-dismiss="modal") Close
+
+
+
+block javascript
+
+    script.
+        function save(){
+            var arr= $("#bank").serializeArray();
+
+
+            var obj = {};
+
+            arr.map(function(data){
+                obj[data.name] = data.value;
+            });
+
+           console.log(obj);
+
+            $.ajax({
+                url:"/save",
+                data:JSON.stringify(obj),
+                contentType:"application/json",
+                type:"POST",
+                success:function(res){
+                    console.log(res);
+                    showPrediction(JSON.parse(res));
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+
+            return false;
+        }
+
+        function showPrediction(customer){
+            $("#customerID").html(customer.id);
+            $("#deposit").html(customer.y);
+            $("#probability").html(customer.probability);
+            $("#modal").modal("show");
+        }
